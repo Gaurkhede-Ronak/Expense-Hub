@@ -59,17 +59,20 @@ const Dashboard = () => {
 
     const balance = income - expense - investment;
 
-    const formatAmount = (amount: number) =>
-        new Intl.NumberFormat("en-IN", {
+    const formatAmount = (amount: number) => {
+        const val = Number(amount) || 0;
+        return new Intl.NumberFormat("en-IN", {
             style: "currency",
             currency: "INR",
             maximumFractionDigits: 0,
-        }).format(amount);
+        }).format(val);
+    };
 
     const formatAmountWithSign = (amount: number, type: string) => {
+        const val = Number(amount) || 0;
         const formatted = new Intl.NumberFormat("en-IN", {
             maximumFractionDigits: 0,
-        }).format(Math.abs(amount));
+        }).format(Math.abs(val));
 
         if (type === "expense") {
             return `-₹${formatted}`;
@@ -124,14 +127,23 @@ const Dashboard = () => {
             };
         });
 
+        const getMonthKey = (dateVal: unknown) => {
+            if (!dateVal) return "";
+            if (typeof dateVal === "string") return dateVal.slice(0, 7);
+            try {
+                return new Date(dateVal as string | number | Date).toISOString().slice(0, 7);
+            } catch {
+                return "";
+            }
+        };
+
         return {
             labels: months.map((month) => month.label),
             income: months.map((month) =>
                 transactions
                     .filter((item) =>
                         item.type === "income" &&
-                        item.date &&
-                        item.date.slice(0, 7) === month.key
+                        getMonthKey(item.date) === month.key
                     )
                     .reduce((sum, item) => sum + (Number(item.amount) || 0), 0)
             ),
@@ -139,8 +151,7 @@ const Dashboard = () => {
                 transactions
                     .filter((item) =>
                         item.type === "expense" &&
-                        item.date &&
-                        item.date.slice(0, 7) === month.key
+                        getMonthKey(item.date) === month.key
                     )
                     .reduce((sum, item) => sum + (Number(item.amount) || 0), 0)
             ),
@@ -155,10 +166,10 @@ const Dashboard = () => {
         const totals = new Map<string, number>();
 
         expenseTransactions.forEach((item) => {
-            const catId = item.categoryid || (typeof item.categoriesid === "object" && item.categoriesid ? item.categoriesid._id : item.categoriesid);
+            const catId = item.categoryid || (typeof item.categoriesid === "object" && item.categoriesid ? item.categoriesid._id : item.categoriesid) || "unknown";
             totals.set(
-                catId,
-                (totals.get(catId) || 0) + (Number(item.amount) || 0)
+                String(catId),
+                (totals.get(String(catId)) || 0) + (Number(item.amount) || 0)
             );
         });
 

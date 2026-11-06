@@ -287,14 +287,12 @@ body {
     position: relative;
 }
 
-.password-wrapper .form-control.is-invalid {
+.password-wrapper .form-control.is-invalid,
+.auth-input.is-invalid {
     background-image: none !important;
 }
 
 .password-toggle {
-    position: absolute;
-    right: 8px;
-    top: 33px;
     width: 36px;
     height: 36px;
     display: inline-flex;
@@ -306,12 +304,19 @@ body {
     color: #94a3b8;
     cursor: pointer;
     transition: color 0.15s, background-color 0.15s;
-    z-index: 5;
+    padding: 0;
+    line-height: 1;
 }
 
 .password-toggle:hover {
     color: #f8fafc;
     background-color: #1c2a42;
+}
+
+.password-toggle svg {
+    display: block;
+    width: 18px;
+    height: 18px;
 }
 
 .auth-submit {

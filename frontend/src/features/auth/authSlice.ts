@@ -42,12 +42,24 @@ export const loginThunk = createAsyncThunk<
 >("auth/login", async (data, { rejectWithValue }) => {
     try {
         const response = await loginUser(data);
+        const resData = response.data || {};
+        const user = resData.user || (resData._id ? resData : null);
 
-        if (!response.data.user) {
+        if (!user) {
             return rejectWithValue("User data not found");
         }
 
-        return response.data.user;
+        const token = resData.accesstoken || resData.accessToken;
+        const refreshToken = resData.refreshtoken || resData.refreshToken;
+
+        if (token) {
+            localStorage.setItem("accesstoken", token);
+        }
+        if (refreshToken) {
+            localStorage.setItem("refreshtoken", refreshToken);
+        }
+
+        return user as User;
     } catch (error) {
         return rejectWithValue(getErrorMessage(error, "Login failed"));
     }
@@ -60,13 +72,24 @@ export const registerThunk = createAsyncThunk<
 >("auth/register", async (data, { rejectWithValue }) => {
     try {
         const response = await registerUser(data);
-        const userData = response.data?.user || response.data;
+        const resData = response.data || {};
+        const user = resData.user || (resData._id ? resData : null);
 
-        if (!userData || !("_id" in userData)) {
+        if (!user) {
             return rejectWithValue("User data not found");
         }
 
-        return userData as User;
+        const token = resData.accesstoken || resData.accessToken;
+        const refreshToken = resData.refreshtoken || resData.refreshToken;
+
+        if (token) {
+            localStorage.setItem("accesstoken", token);
+        }
+        if (refreshToken) {
+            localStorage.setItem("refreshtoken", refreshToken);
+        }
+
+        return user as User;
     } catch (error) {
         return rejectWithValue(
             getErrorMessage(error, "Registration failed")
@@ -80,14 +103,35 @@ export const getCurrentUserThunk = createAsyncThunk<
     { rejectValue: string }
 >("auth/getCurrentUser", async (_, { rejectWithValue }) => {
     try {
-        const response = await getCurrentUser();
+        const token =
+            localStorage.getItem("accesstoken") ||
+            localStorage.getItem("accessToken") ||
+            localStorage.getItem("token");
 
-        if (!response.data || !("_id" in response.data)) {
+        if (!token) {
+            return rejectWithValue("No active session");
+        }
+
+        const response = await getCurrentUser();
+        const resData = response.data || {};
+        const user = resData.user || (resData._id ? resData : null);
+
+        if (!user || !user._id) {
+            localStorage.removeItem("accesstoken");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("token");
+            localStorage.removeItem("refreshtoken");
+            localStorage.removeItem("refreshToken");
             return rejectWithValue("User data not found");
         }
 
-        return response.data as User;
+        return user as User;
     } catch (error) {
+        localStorage.removeItem("accesstoken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshtoken");
+        localStorage.removeItem("refreshToken");
         return rejectWithValue(
             getErrorMessage(error, "Session expired")
         );
@@ -105,6 +149,12 @@ export const logoutThunk = createAsyncThunk<
         return rejectWithValue(
             getErrorMessage(error, "Logout failed")
         );
+    } finally {
+        localStorage.removeItem("accesstoken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshtoken");
+        localStorage.removeItem("refreshToken");
     }
 });
 

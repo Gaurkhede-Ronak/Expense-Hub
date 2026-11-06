@@ -8,7 +8,9 @@ router.use(verifyJWT)
 
 router.route("/createbudget").post(createBudget)
 router.route("/getallbudgets").get(getAllBudgets)
+router.route("/getallbudget").get(getAllBudgets)
 router.route("/getsinglebudget/:id").get(getSingleBudget)
+router.route("/singlebudget/:id").get(getSingleBudget)
 router.route("/updatebudget/:id").patch(updateBudget)
 router.route("/deletebudget/:id").delete(deleteBudget)
 

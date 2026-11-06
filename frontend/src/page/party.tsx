@@ -135,8 +135,8 @@ const PartyPage = () => {
         return parties.filter((party) => {
             const matchesSearch =
                 !q ||
-                party.party_name.toLowerCase().includes(q) ||
-                party.title.toLowerCase().includes(q) ||
+                (party.party_name || "").toLowerCase().includes(q) ||
+                (party.title || "").toLowerCase().includes(q) ||
                 (party.party_type || "").toLowerCase().includes(q);
 
             const matchesType =

@@ -174,51 +174,49 @@ const Register = () => {
                                         autoComplete="email"
                                     />
 
-                                    <div className="password-wrapper">
-                                        <FormikInput
-                                            label="Password"
-                                            name="password"
-                                            type={showPassword ? "text" : "password"}
-                                            placeholder="Create password"
-                                            autoComplete="new-password"
-                                        />
+                                    <FormikInput
+                                        label="Password"
+                                        name="password"
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="Create password"
+                                        autoComplete="new-password"
+                                        rightElement={
+                                            <button
+                                                type="button"
+                                                className="password-toggle"
+                                                onClick={() => setShowPassword((prev) => !prev)}
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff size={18} />
+                                                ) : (
+                                                    <Eye size={18} />
+                                                )}
+                                            </button>
+                                        }
+                                    />
 
-                                        <button
-                                            type="button"
-                                            className="password-toggle"
-                                            onClick={() => setShowPassword((prev) => !prev)}
-                                            aria-label={showPassword ? "Hide password" : "Show password"}
-                                        >
-                                            {showPassword ? (
-                                                <EyeOff size={18} />
-                                            ) : (
-                                                <Eye size={18} />
-                                            )}
-                                        </button>
-                                    </div>
-
-                                    <div className="password-wrapper">
-                                        <FormikInput
-                                            label="Confirm Password"
-                                            name="confirmPassword"
-                                            type={showConfirmPassword ? "text" : "password"}
-                                            placeholder="Confirm password"
-                                            autoComplete="new-password"
-                                        />
-
-                                        <button
-                                            type="button"
-                                            className="password-toggle"
-                                            onClick={() => setShowConfirmPassword((prev) => !prev)}
-                                            aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                                        >
-                                            {showConfirmPassword ? (
-                                                <EyeOff size={18} />
-                                            ) : (
-                                                <Eye size={18} />
-                                            )}
-                                        </button>
-                                    </div>
+                                    <FormikInput
+                                        label="Confirm Password"
+                                        name="confirmPassword"
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        placeholder="Confirm password"
+                                        autoComplete="new-password"
+                                        rightElement={
+                                            <button
+                                                type="button"
+                                                className="password-toggle"
+                                                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                                                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                                            >
+                                                {showConfirmPassword ? (
+                                                    <EyeOff size={18} />
+                                                ) : (
+                                                    <Eye size={18} />
+                                                )}
+                                            </button>
+                                        }
+                                    />
 
                                     <Button
                                         type="submit"

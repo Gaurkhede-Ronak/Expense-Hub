@@ -14,6 +14,7 @@ const router = Router();
 router.use(verifyJWT);
 
 router.route("/getallcategories").get(getAllCategories);
+router.route("/getallcategory").get(getAllCategories);
 
 router.route("/createcategory").post(createCategory);
 

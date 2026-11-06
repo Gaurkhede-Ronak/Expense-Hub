@@ -219,7 +219,7 @@ const Topbar = ({ onToggleSidebar, onLogout }: TopbarProps) => {
         results.push({
           id: `cat-${c._id}`,
           title: name,
-          subtitle: `${type.charAt(0).toUpperCase() + type.slice(1)} Category`,
+          subtitle: `${type ? type.charAt(0).toUpperCase() + type.slice(1) : "General"} Category`,
           path: "/categories",
           type: "category",
         });
@@ -238,7 +238,7 @@ const Topbar = ({ onToggleSidebar, onLogout }: TopbarProps) => {
         results.push({
           id: `prt-${p._id}`,
           title: name,
-          subtitle: `${title ? `${title} • ` : ""}${type.charAt(0).toUpperCase() + type.slice(1)}`,
+          subtitle: `${title ? `${title} • ` : ""}${type ? type.charAt(0).toUpperCase() + type.slice(1) : "Party"}`,
           path: "/parties",
           type: "party",
         });

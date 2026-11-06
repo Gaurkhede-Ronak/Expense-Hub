@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Categories } from "../models/categories.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -155,6 +156,11 @@ const getAllCategories = asyncHandler(async (req, res) => {
 
 const updateCategory = asyncHandler(async (req, res) => {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ApiError(400, "Invalid category ID");
+    }
+
     const rawName = req.body.category_name || req.body.categories_name;
     const { type } = req.body;
 
@@ -232,6 +238,10 @@ const updateCategory = asyncHandler(async (req, res) => {
 
 const deleteCategory = asyncHandler(async (req, res) => {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ApiError(400, "Invalid category ID");
+    }
 
     const category = await Categories.findOneAndDelete({
         _id: id,

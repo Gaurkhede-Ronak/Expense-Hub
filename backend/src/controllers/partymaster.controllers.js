@@ -45,12 +45,15 @@ const createParty = asyncHandler(async (req, res) => {
         typeof party_type !== "string" ||
         !party_type.trim() ||
         typeof party_name !== "string" ||
-        !party_name.trim() ||
-        typeof title !== "string" ||
-        !title.trim()
+        !party_name.trim()
     ) {
-        throw new ApiError(400, "All fields are required");
+        throw new ApiError(400, "Party type and party name are required");
     }
+
+    const resolvedTitle =
+        typeof title === "string" && title.trim()
+            ? title.trim()
+            : party_name.trim();
 
     const normalizedType = party_type.trim().toLowerCase();
 
@@ -64,7 +67,7 @@ const createParty = asyncHandler(async (req, res) => {
     const partyMaster = await PartyMaster.create({
         party_type: normalizedType,
         party_name: party_name.trim(),
-        title: title.trim(),
+        title: resolvedTitle,
         userid: req.user._id,
     });
 
@@ -219,7 +222,7 @@ const deleteparty = asyncHandler(async (req, res) => {
 
     const usedInTransaction = await Transactions.exists({
         userid: req.user._id,
-        partyid: id,
+        $or: [{ party_id: id }, { partyid: id }],
     });
 
     if (usedInTransaction) {

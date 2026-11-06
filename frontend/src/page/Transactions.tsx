@@ -373,7 +373,7 @@ const TransactionPage = () => {
                 label: `${party.party_name} (${party.party_type})`,
                 value: party._id,
                 color:
-                    DEFAULT_OPTION_COLORS[party.party_type.toLowerCase()] ||
+                    DEFAULT_OPTION_COLORS[(party.party_type || "").toLowerCase()] ||
                     "#38bdf8",
             })),
         },
@@ -402,15 +402,20 @@ const TransactionPage = () => {
         },
     ];
 
-    const formatAmount = (amount: number) =>
-        new Intl.NumberFormat("en-IN", {
+    const formatAmount = (amount: number) => {
+        const val = Number(amount) || 0;
+        return new Intl.NumberFormat("en-IN", {
             style: "currency",
             currency: "INR",
             maximumFractionDigits: 2,
-        }).format(amount);
+        }).format(val);
+    };
 
-    const formatDate = (date: string) =>
-        new Date(date).toLocaleDateString("en-IN");
+    const formatDate = (date: string) => {
+        if (!date) return "N/A";
+        const d = new Date(date);
+        return Number.isNaN(d.getTime()) ? String(date) : d.toLocaleDateString("en-IN");
+    };
 
     const typeVariant = (type: TransactionType) => {
         if (type === "income") return "success";

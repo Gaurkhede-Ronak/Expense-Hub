@@ -153,28 +153,27 @@ const Login = () => {
                                         autoComplete="email"
                                     />
 
-                                    <div className="password-wrapper">
-                                        <FormikInput
-                                            name="password"
-                                            label="Password"
-                                            type={showPassword ? "text" : "password"}
-                                            placeholder="Enter your password"
-                                            autoComplete="current-password"
-                                        />
-
-                                        <button
-                                            type="button"
-                                            className="password-toggle"
-                                            onClick={() => setShowPassword((prev) => !prev)}
-                                            aria-label={showPassword ? "Hide password" : "Show password"}
-                                        >
-                                            {showPassword ? (
-                                                <EyeOff size={18} />
-                                            ) : (
-                                                <Eye size={18} />
-                                            )}
-                                        </button>
-                                    </div>
+                                    <FormikInput
+                                        name="password"
+                                        label="Password"
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="Enter your password"
+                                        autoComplete="current-password"
+                                        rightElement={
+                                            <button
+                                                type="button"
+                                                className="password-toggle"
+                                                onClick={() => setShowPassword((prev) => !prev)}
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff size={18} />
+                                                ) : (
+                                                    <Eye size={18} />
+                                                )}
+                                            </button>
+                                        }
+                                    />
 
                                     <Button
                                         type="submit"

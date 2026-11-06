@@ -11,9 +11,9 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 const allowedTypes = ["expense", "income", "investment"];
 
 const createTransaction = asyncHandler(async (req, res) => {
+    const categoriesid = req.body.categoriesid || req.body.categoryid;
+    const party_id = req.body.party_id || req.body.partyid;
     const {
-        categoriesid,
-        party_id,
         type,
         title,
         amount,
@@ -136,10 +136,14 @@ const createTransaction = asyncHandler(async (req, res) => {
         }
     }
 
+    const populatedTransaction = await Transactions.findById(transaction._id)
+        .populate("categoriesid", "category_name categories_name icon type")
+        .populate("party_id", "party_name party_type title");
+
     return res.status(201).json(
         new ApiResponse(
             201,
-            { ...transaction.toObject(), budgetAlert },
+            { ...(populatedTransaction ? populatedTransaction.toObject() : transaction.toObject()), budgetAlert },
             "Transaction created successfully"
         )
     );
@@ -163,8 +167,8 @@ const getAllTransactions = asyncHandler(async (req, res) => {
     }
 
     const transactions = await Transactions.find(filter)
-        .populate("categoriesid", "categories_name icon type")
-        .populate("party_id", "party_name type")
+        .populate("categoriesid", "category_name categories_name icon type")
+        .populate("party_id", "party_name party_type title")
         .sort({ date: -1 });
 
     return res.status(200).json(
@@ -189,8 +193,8 @@ const getSingleTransaction = asyncHandler(async (req, res) => {
         _id: id,
         userid: req.user._id
     })
-        .populate("categoriesid", "categories_name icon type")
-        .populate("party_id", "party_name type");
+        .populate("categoriesid", "category_name categories_name icon type")
+        .populate("party_id", "party_name party_type title");
 
     if (!transaction) {
         throw new ApiError(404, "Transaction not found");
@@ -210,9 +214,9 @@ const updateTransaction = asyncHandler(async (req, res) => {
 
     const { id } = req.params;
 
+    const categoriesid = req.body.categoriesid || req.body.categoryid;
+    const party_id = req.body.party_id || req.body.partyid;
     const {
-        categoriesid,
-        party_id,
         type,
         title,
         amount,
@@ -368,10 +372,14 @@ const updateTransaction = asyncHandler(async (req, res) => {
         }
     }
 
+    const populatedTransaction = await Transactions.findById(transaction._id)
+        .populate("categoriesid", "category_name categories_name icon type")
+        .populate("party_id", "party_name party_type title");
+
     return res.status(200).json(
         new ApiResponse(
             200,
-            { ...transaction.toObject(), budgetAlert },
+            { ...(populatedTransaction ? populatedTransaction.toObject() : transaction.toObject()), budgetAlert },
             "Transaction updated successfully"
         )
     );

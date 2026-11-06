@@ -52,10 +52,11 @@ const CategoryPage = () => {
     const filteredCategories = useMemo(() => {
         const q = search.trim().toLowerCase();
         if (!q) return categories;
-        return categories.filter((category) =>
-            category.category_name.toLowerCase().includes(q) ||
-            category.type.toLowerCase().includes(q)
-        );
+        return categories.filter((category) => {
+            const name = (category.category_name || category.categories_name || "").toLowerCase();
+            const type = (category.type || "").toLowerCase();
+            return name.includes(q) || type.includes(q);
+        });
     }, [categories, search]);
 
     const handleAdd = () => {

@@ -12,11 +12,14 @@ export const getAllTransactions = async () => {
             TransactionApiResponse<Transaction[]>
         >("/api/transaction/getalltransactions");
         return response.data;
-    } catch {
-        const fallback = await axiosInstance.get<
-            TransactionApiResponse<Transaction[]>
-        >("/api/transaction/getalltransaction");
-        return fallback.data;
+    } catch (error: any) {
+        if (error?.response?.status === 404) {
+            const fallback = await axiosInstance.get<
+                TransactionApiResponse<Transaction[]>
+            >("/api/transaction/getalltransaction");
+            return fallback.data;
+        }
+        throw error;
     }
 };
 
@@ -26,11 +29,14 @@ export const getSingleTransaction = async (id: string) => {
             TransactionApiResponse<Transaction>
         >(`/api/transaction/getsingletransaction/${id}`);
         return response.data;
-    } catch {
-        const fallback = await axiosInstance.get<
-            TransactionApiResponse<Transaction>
-        >(`/api/transaction/singletransaction/${id}`);
-        return fallback.data;
+    } catch (error: any) {
+        if (error?.response?.status === 404) {
+            const fallback = await axiosInstance.get<
+                TransactionApiResponse<Transaction>
+            >(`/api/transaction/singletransaction/${id}`);
+            return fallback.data;
+        }
+        throw error;
     }
 };
 

@@ -12,11 +12,14 @@ export const getAllCategories = async () => {
             CategoryApiResponse<Category[]>
         >("/api/category/getallcategories");
         return response.data;
-    } catch {
-        const fallback = await axiosInstance.get<
-            CategoryApiResponse<Category[]>
-        >("/api/category/getallcategory");
-        return fallback.data;
+    } catch (error: any) {
+        if (error?.response?.status === 404) {
+            const fallback = await axiosInstance.get<
+                CategoryApiResponse<Category[]>
+            >("/api/category/getallcategory");
+            return fallback.data;
+        }
+        throw error;
     }
 };
 

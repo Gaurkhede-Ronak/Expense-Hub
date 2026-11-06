@@ -142,15 +142,19 @@ const BudgetPage = () => {
     };
 
     const formatMonth = (month: string) => {
+        if (!month || typeof month !== "string" || !month.includes("-")) {
+            return month || "N/A";
+        }
         const [year, monthNumber] = month.split("-").map(Number);
+        if (!year || !monthNumber) return month;
 
-        return new Date(year, monthNumber - 1).toLocaleDateString(
-            "en-IN",
-            {
-                month: "long",
-                year: "numeric",
-            }
-        );
+        const d = new Date(year, monthNumber - 1);
+        if (Number.isNaN(d.getTime())) return month;
+
+        return d.toLocaleDateString("en-IN", {
+            month: "long",
+            year: "numeric",
+        });
     };
 
     const budgetFields: FormField[] = [
