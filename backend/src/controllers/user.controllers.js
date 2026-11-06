@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/users.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
-import { asyncHandler } from "../utils/asynchandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { cookiesOption } from "../constants.js";
 import { seedDefaultUserData } from "../utils/seedDefaults.js";
 
