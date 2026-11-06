@@ -1,38 +1,23 @@
 
 
 import { Navigate, Outlet } from "react-router-dom";
-
-import { Spinner } from "react-bootstrap";
- 
+import Loader from "../components/common/loader";
 import { useAppSelector } from "../app/hooks";
- 
+
 const ProtectedRoute = () => {
-
     const { isAuthenticated, initialized } = useAppSelector(
-
         (state) => state.auth
-
     );
- 
+
     if (!initialized) {
-
-        return (
-<div className="d-flex justify-content-center align-items-center vh-100">
-<Spinner animation="border" variant="primary" />
-</div>
-
-        );
-
+        return <Loader />;
     }
- 
+
     return isAuthenticated
-
         ? <Outlet />
-
         : <Navigate to="/login" replace />;
-
 };
- 
+
 export default ProtectedRoute;
 
  

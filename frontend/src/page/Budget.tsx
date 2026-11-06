@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
     Badge,
@@ -92,13 +92,13 @@ const BudgetPage = () => {
         dispatch(getAllCategoriesThunk());
     }, [dispatch]);
 
-    const getCategoryObj = (budget: Budget) => {
+    const getCategoryObj = useCallback((budget: Budget) => {
         if (typeof budget.categoryid === "object" && budget.categoryid !== null) {
             return budget.categoryid as any;
         }
         const id = typeof budget.categoryid === "string" ? budget.categoryid : (budget as any)?.category_id;
         return categories.find((category) => category._id === id);
-    };
+    }, [categories]);
 
     const getCategoryName = (budget: Budget) => {
         const cat = getCategoryObj(budget);
@@ -131,7 +131,7 @@ const BudgetPage = () => {
 
             return matchesSearch && matchesMonth;
         });
-    }, [budgets, categories, search, monthFilter]);
+    }, [budgets, getCategoryObj, search, monthFilter]);
 
     const formatAmount = (amount: number) => {
         return new Intl.NumberFormat("en-IN", {

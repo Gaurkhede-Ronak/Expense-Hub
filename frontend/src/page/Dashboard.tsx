@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 import {
     Badge,
@@ -90,7 +90,7 @@ const Dashboard = () => {
         return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
     };
 
-    const getCategoryName = (id: string, item?: any) => {
+    const getCategoryName = useCallback((id: string, item?: any) => {
         if (item && typeof item.categoriesid === "object" && item.categoriesid !== null) {
             return (
                 item.categoriesid.categories_name ||
@@ -100,15 +100,15 @@ const Dashboard = () => {
         }
         const cat = categories.find((c) => c._id === id);
         return cat?.category_name || (cat as any)?.categories_name || "Unknown";
-    };
+    }, [categories]);
 
-    const getPartyName = (id: string, item?: any) => {
+    const getPartyName = useCallback((id: string, item?: any) => {
         if (item && typeof item.party_id === "object" && item.party_id !== null) {
             return item.party_id.party_name || "Unknown";
         }
         const prt = parties.find((p) => p._id === id);
         return prt?.party_name || "Unknown";
-    };
+    }, [parties]);
 
     const chartData = useMemo(() => {
         const months = Array.from({ length: 6 }, (_, index) => {
@@ -177,7 +177,7 @@ const Dashboard = () => {
             label: getCategoryName(id),
             amount,
         }));
-    }, [transactions, categories]);
+    }, [transactions, getCategoryName]);
 
     const recentTransactions = [...transactions]
         .sort(

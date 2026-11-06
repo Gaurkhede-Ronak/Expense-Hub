@@ -136,7 +136,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
     subscription: CalendarCheck,
 };
 
-export const getCategoryIconComponent = (
+const getCategoryIconComponent = (
     icon?: string,
     categoryName?: string,
     type?: string
@@ -176,12 +176,12 @@ export const CategoryIcon: React.FC<CategoryIconProps> = ({
     className = "",
 }) => {
     const IconComponent = getCategoryIconComponent(icon, categoryName, type);
-    return (
-        <IconComponent
-            size={size}
-            className={`category-lucide-icon ${className}`.trim()}
-            style={{ color: "#ffffff", strokeWidth: 2 }}
-        />
-    );
+    return React.createElement(IconComponent, {
+        size,
+        className: `category-lucide-icon ${className}`.trim(),
+        style: { color: "#ffffff", strokeWidth: 2 },
+    });
 };
+
+export default CategoryIcon;
 

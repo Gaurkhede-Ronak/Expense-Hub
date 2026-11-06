@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
     Badge,
@@ -25,8 +25,8 @@ import CommonModal from "../components/common/CommonModal";
 import { CustomSelect, type SelectOption } from "../components/common/CustomSelect";
 import ReusableFormModal, {
     type FormField,
-    DEFAULT_OPTION_COLORS,
 } from "../components/common/ReusableFormModal";
+import { DEFAULT_OPTION_COLORS } from "../constants/optionColors";
 
 import {
     getAllTransactionsThunk,
@@ -107,7 +107,7 @@ const TransactionPage = () => {
         dispatch(getAllBudgetsThunk());
     }, [dispatch]);
 
-    const getCategoryName = (transaction: Transaction) => {
+    const getCategoryName = useCallback((transaction: Transaction) => {
         if (typeof transaction.categoriesid === "object" && transaction.categoriesid !== null) {
             return (
                 (transaction.categoriesid as any).categories_name ||
@@ -118,16 +118,16 @@ const TransactionPage = () => {
         const id = transaction.categoryid || transaction.categoriesid;
         const cat = categories.find((c) => c._id === id);
         return cat?.category_name || (cat as any)?.categories_name || "Unknown";
-    };
+    }, [categories]);
 
-    const getPartyName = (transaction: Transaction) => {
+    const getPartyName = useCallback((transaction: Transaction) => {
         if (typeof transaction.party_id === "object" && transaction.party_id !== null) {
             return (transaction.party_id as any).party_name || "Unknown";
         }
         const id = transaction.partyid || transaction.party_id;
         const party = parties.find((p) => p._id === id);
         return party?.party_name || "Unknown";
-    };
+    }, [parties]);
 
     const filteredTransactions = useMemo(() => {
         const query = search.trim().toLowerCase();
@@ -151,7 +151,7 @@ const TransactionPage = () => {
 
             return matchesSearch && matchesType;
         });
-    }, [transactions, search, typeFilter, categories, parties]);
+    }, [transactions, search, typeFilter, getCategoryName, getPartyName]);
 
     const handleOpenAdd = () => {
         dispatch(clearSelectedTransaction());

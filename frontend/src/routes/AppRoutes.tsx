@@ -1,15 +1,13 @@
 import {
     createBrowserRouter,
     Navigate,
-    Outlet,
 } from "react-router-dom";
- 
+
 import AuthLayout from "../components/layout/authLayout";
 import MainLayout from "../components/layout/MainLayout";
-import Loader from "../components/common/loader";
- 
-import { useAppSelector } from "../app/hooks";
- 
+import PublicRoute from "./PublicRoute";
+import ProtectedRoute from "./ProtectedRoute";
+
 import Login from "../page/Login";
 import Register from "../page/Register";
 import CategoryPage from "../page/Category";
@@ -19,31 +17,7 @@ import BudgetPage from "../page/Budget";
 import Dashboard from "../page/Dashboard";
 import Settings from "../page/Settings";
 import Profile from "../page/Profile";
- 
-const PublicRoute = () => {
-    const { isAuthenticated, initialized } = useAppSelector(
-        (state) => state.auth
-    );
- 
-    if (!initialized) return <Loader />;
- 
-    return isAuthenticated
-        ? <Navigate to="/dashboard" replace />
-        : <Outlet />;
-};
- 
-const ProtectedRoute = () => {
-    const { isAuthenticated, initialized } = useAppSelector(
-        (state) => state.auth
-    );
- 
-    if (!initialized) return <Loader />;
- 
-    return isAuthenticated
-        ? <Outlet />
-        : <Navigate to="/login" replace />;
-};
- 
+
 const router = createBrowserRouter([
     {
         element: <PublicRoute />,

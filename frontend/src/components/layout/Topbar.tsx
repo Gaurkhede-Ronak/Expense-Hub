@@ -173,7 +173,9 @@ const Topbar = ({ onToggleSidebar, onLogout }: TopbarProps) => {
     setReadIds(updated);
     try {
       localStorage.setItem("expensehub_read_notifications", JSON.stringify(updated));
-    } catch {}
+    } catch (error) {
+      void error;
+    }
   };
 
   const handleMarkSingleAsRead = (id: string) => {
@@ -181,7 +183,9 @@ const Topbar = ({ onToggleSidebar, onLogout }: TopbarProps) => {
     setReadIds(updated);
     try {
       localStorage.setItem("expensehub_read_notifications", JSON.stringify(updated));
-    } catch {}
+    } catch (error) {
+      void error;
+    }
   };
 
   const searchResults = useMemo(() => {
