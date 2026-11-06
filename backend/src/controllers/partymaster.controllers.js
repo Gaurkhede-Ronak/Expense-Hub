@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { PartyMaster } from "../models/Partymaster.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { asyncHandler } from "../utils/asynchandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const allowedPartyTypes = [
     "person",
